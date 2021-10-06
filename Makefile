@@ -1,8 +1,8 @@
 runsim:
 	g++ runsim.cpp license.cpp -o runsim
 
-testChild:
-	g++ testChild.cpp license.cpp -o testChild
+testsim:
+	g++ testsim.cpp license.cpp -o testsim
 
 clean:
-	rm runsim testChild
+	rm runsim testsim

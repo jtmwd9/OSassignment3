@@ -1,4 +1,6 @@
 #include <string>
+#include <iostream>
+#include <fstream>
 #include "license.h"
 
 using namespace std;
@@ -24,5 +26,8 @@ void License::removeLicenses(int n) {
 }
 
 void License::logmsg(string msg) {
-
+	ofstream myFile;
+	myFile.open("logfile", fstream::app);
+	myFile << msg << endl;
+	myFile.close();
 }
