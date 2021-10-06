@@ -18,11 +18,11 @@ void License::initLicense(int num) {
 }
 
 void License::addToLicenses(int n) {
-
+	this->nLicense += n;
 }
 
 void License::removeLicenses(int n) {
-
+	this->nLicense -= n;
 }
 
 void License::logmsg(string msg) {

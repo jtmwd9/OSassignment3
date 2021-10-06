@@ -55,7 +55,7 @@ void spawn (int shmid) {
 	int size = 0;
 	string line;
 	if (myFile.is_open()) {
-		cout << "file\n";
+
 		while (getline(myFile, line)) {
 			size++;
 		}
@@ -64,15 +64,15 @@ void spawn (int shmid) {
 		int lineIndex = 0;
 		int pidIndex = 0;
 		string word = "";
-		cout <<"here\n";
+
 
 		myFile.clear();
 		myFile.seekg(0);
 		while (getline (myFile, line)) {
-			cout << "while2\n";
+
 			lineIndex = 0;
 			for (int x = 0; x < line.length(); x++) {
-				cout<<"for\n";
+
 				if (line[x] == ' ') {
             				lineArray[lineIndex] = word;
 					lineIndex++;
@@ -82,18 +82,21 @@ void spawn (int shmid) {
         			}
     			}
     			lineArray[lineIndex] = word;
-			cout << lineArray [0] <<  lineArray[1] << lineArray[2];	
+			word = "";
+
 			pidArray[pidIndex++] = fork();
-			cout << "after\n";
+
 			if (pidArray[pidIndex -1] == -1) {
 				perror("fork");
 			} else if (pidArray[pidIndex - 1] > 0) {
-				cout << getpid() <<  "parent\n";
+				//parent
 			} else {
 				cout << getpid() << "child\n";
+				cout << lineArray[0] << " " << lineArray[1] << " " << lineArray[2] << endl;
 				char* args[]= {const_cast<char*>(lineArray[0].c_str()), const_cast<char*>(lineArray[1].c_str()), const_cast<char*>(lineArray[2].c_str()), NULL};
 				execvp(args[0],args);
-				exit(0);
+				perror("execvp");
+				exit(1);
 			} 
 		}
 		pid_t timer_pid = fork();
@@ -103,6 +106,11 @@ void spawn (int shmid) {
 				kill(pidArray[i], SIGKILL);
 			}
 			exit(0);
+		}
+		pid_t w;
+		while (size > 0) {
+			w = wait(NULL);
+			--size;
 		}
 	}
 	myFile.close();
@@ -120,7 +128,7 @@ int main (int argv, char *argc[]) {
 	int shmid = initSharedMemory (l);
 	l->initLicense(num);
 	spawn(shmid);
-	cout << l->returnLicense() << endl;
+
 	detachSharedMemory(l);
 	destroySharedMemory(shmid);	
 

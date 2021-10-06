@@ -5,4 +5,4 @@ testsim:
 	g++ testsim.cpp license.cpp -o testsim
 
 clean:
-	rm runsim testsim
+	rm runsim testsim logfile
