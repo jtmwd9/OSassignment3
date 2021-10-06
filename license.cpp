@@ -3,26 +3,26 @@
 
 using namespace std;
 
-int getLicense() {
+int License::getLicense() {
 	return 0;
 }
 
-int returnLicense() {
-	return 0;
+int License::returnLicense() {
+	return this->nLicense;
 }
 
-int initLicense() {
-	return 0;
+void License::initLicense(int num) {
+	this->nLicense = num;
 }
 
-void addToLicense(int n) {
-
-}
-
-void removeLicense(int n) {
+void License::addToLicenses(int n) {
 
 }
 
-void logmsg(string msg) {
+void License::removeLicenses(int n) {
+
+}
+
+void License::logmsg(string msg) {
 
 }

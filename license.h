@@ -4,11 +4,12 @@
 #include <string>
 
 class License {
+	private:
+		int nLicense;
 	public:
-		int nLicenses;
 		int getLicense();
 		int returnLicense();
-		int initLicense();
+		void initLicense(int);
 		void addToLicenses(int);
 		void removeLicenses(int);
 		void logmsg(std::string);
