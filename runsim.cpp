@@ -1,3 +1,7 @@
+//James MArkus
+//OS assignment 2
+//license/shared memory utility
+
 #include "license.h"
 #include "config.h"
 #include <stdio.h>
@@ -25,7 +29,7 @@ int validateArguments (int num) {
 	return num;
 }
 
-int initSharedMemory (License *&l) {
+int initSharedMemory (License *&l) {		
 	key_t key = ftok("/tmp", 'J');
 	int shmid = shmget(key, sizeof(l), 0666|IPC_CREAT);
 	if (shmid == -1) {
@@ -50,31 +54,34 @@ void destroySharedMemory (int shmid) {
 
 void spawn (int shmid) {
 	struct configData con;
-	ifstream myFile, copyFile;
-	myFile.open("testing.data");
+	ofstream myFile, copyFile;
+	myFile.open("markusTesting.data");	//copy test data to a file i create
 	int size = 0;
 	string line;
 	if (myFile.is_open()) {
 
-		while (getline(myFile, line)) {
+		while (getline(cin, line)) {
+			myFile << line << "\n";
 			size++;
 		}
+		myFile.close();
+		ifstream copyFile;
+		copyFile.open("markusTesting.data");
 		pid_t pidArray [size];
 		string lineArray [3];
 		int lineIndex = 0;
 		int pidIndex = 0;
 		string word = "";
 
-
-		myFile.clear();
-		myFile.seekg(0);
-		while (getline (myFile, line)) {
+		while (getline (copyFile, line)) {
 
 			lineIndex = 0;
+			lineArray[0] = "./";
+			lineArray[1] = "";
 			for (int x = 0; x < line.length(); x++) {
 
 				if (line[x] == ' ') {
-            				lineArray[lineIndex] = word;
+            				lineArray[lineIndex] += word;
 					lineIndex++;
             				word = "";
         			} else {
@@ -84,22 +91,22 @@ void spawn (int shmid) {
     			lineArray[lineIndex] = word;
 			word = "";
 
-			pidArray[pidIndex++] = fork();
+			pidArray[pidIndex++] = fork();		//child
 
 			if (pidArray[pidIndex -1] == -1) {
 				perror("fork");
 			} else if (pidArray[pidIndex - 1] > 0) {
 				//parent
 			} else {
-				cout << getpid() << "child\n";
+
 				cout << lineArray[0] << " " << lineArray[1] << " " << lineArray[2] << endl;
 				char* args[]= {const_cast<char*>(lineArray[0].c_str()), const_cast<char*>(lineArray[1].c_str()), const_cast<char*>(lineArray[2].c_str()), NULL};
-				execvp(args[0],args);
+				execvp(args[0],args);		//grandchild
 				perror("execvp");
 				exit(1);
 			} 
 		}
-		pid_t timer_pid = fork();
+		pid_t timer_pid = fork();		//child used as timer
 		if (timer_pid == 0) {
 			sleep(con.timeout);
 			for (int i = 0; i < size; i++) {
@@ -113,7 +120,7 @@ void spawn (int shmid) {
 			--size;
 		}
 	}
-	myFile.close();
+	copyFile.close();
 }
 
 int main (int argv, char *argc[]) {

@@ -1,0 +1,20 @@
+James Markus
+OS Assignment 2
+
+To compile:
+	$make runsim
+	$make testsim
+
+	THERE WILL BE WARNINGS. I was going to try to fix them, but I ran out of time. Try to ignore them pls
+
+To run:
+	$./runsim [int] <[testfile]
+		int: number of 'licenses' you would like to allow. Defaults to 10.
+
+I tried to use queue for the licenses, but after an hour or so of frustration I realized that you can't do that with shared memory because you have to know how big shared memory be.
+
+FOR TESTING:
+	I assume that your testing files will be in the same format as the example so I hard coded "./" to each call for testsim
+
+git repository:
+	https://github.com/jtmwd9/OSassignment2

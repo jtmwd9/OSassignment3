@@ -2,15 +2,17 @@
 #define LICENSE_H
 
 #include <string>
-#include <vector>
+#include <queue>
 
 class License {
 	private:
 		int nLicense;
-		vector<int> licenseID;
+		int licenseID [20];
+		bool choosing;
 	public:
-		int getLicense();
-		int returnLicense();
+		void getLicense();
+		void returnLicense();
+		int returnLicenseCount();
 		void initLicense(int);
 		void addToLicenses(int);
 		void removeLicenses(int);
