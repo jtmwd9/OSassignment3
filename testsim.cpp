@@ -32,6 +32,7 @@ int main (int argc, char *argv[]) {
 	stringstream msg;
 
 	l->getLicense();
+
 	for (int i = 0; i < repeatFactor; i++) {
 		sleep(sleepyTime);
 		now = time(0);

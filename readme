@@ -10,11 +10,12 @@ To compile:
 To run:
 	$./runsim [int] <[testfile]
 		int: number of 'licenses' you would like to allow. Defaults to 10.
+		you must include the < and a file name with testing data, there is no default
 
-I tried to use queue for the licenses, but after an hour or so of frustration I realized that you can't do that with shared memory because you have to know how big shared memory be.
+Running will take some time because of the time between writing to log file. for the testing.data file I am including it might take a minute or two. You can cntrl-C and check the partial results in the logfile if you don't feel like waiting the whole time.
 
 FOR TESTING:
 	I assume that your testing files will be in the same format as the example so I hard coded "./" to each call for testsim
 
 git repository:
-	https://github.com/jtmwd9/OSassignment2
+	https://github.com/jtmwd9/OSassignment3

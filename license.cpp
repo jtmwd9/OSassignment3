@@ -1,48 +1,44 @@
 #include <string>
 #include <iostream>
 #include <fstream>
-#include <algorithm>
-#include <queue>
 #include <unistd.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 #include "license.h"
 
 using namespace std;
 
-void License::getLicense() {		//gatekeeper for critical section
-	this->choosing = true;
+struct mesg_buffer {
+	long mesg_type;
+	char mesg_text;
+} message;
 
-	int max, index, me;
-	max = -1;
-	index = getpid() % 10;
-	if (this->licenseID[0] == -1) {
-		licenseID[0] = NULL;
-		me = 1;
-		this->licenseID[index] = me;
-	} else {
-		for (int i = 0; i < (sizeof(this->licenseID) / sizeof(this->licenseID[0])); i++) {
-			if (max > this->licenseID[i]) {
-				max = this->licenseID[i];
-			}
-		}
-		me = max + 1;
-		this->licenseID[index] = me;
-	}
-	this->choosing = false;
-	bool turn = false;
-	while (turn == false || this->choosing == true || this->nLicense <= 0) {
-		turn = true;		
-		for (int i = 0; i < (sizeof(this->licenseID) / sizeof(this->licenseID[0])); i++) {
-			if (me > this->licenseID[i]) {
-				turn = false;
-			}
-		}
+void License::getLicense() {		//gatekeeper for critical section
+	key_t key;
+	int msgid;
+	key = ftok("JamesMessage", 69);
+
+	msgid = msgget(key, 0666);
+	
+	msgrcv(msgid, &message, sizeof(message), 1, 0);
+	cout << message.mesg_text << endl;
+	while (message.mesg_text != '1') {	
+		msgrcv(msgid, (void*)&message, sizeof(message), 1, 0);
 	};
+cout << "break" << endl;
 	this->removeLicenses(1);
 }
 
 void License::returnLicense() {		//exiting critical section
-
 	this->addToLicenses(1);
+
+	key_t key;
+	int msgid;
+	key = ftok("JamesMessage", 69);
+
+	msgid = msgget(key, 0666);
+	message.mesg_text = '1';
+	msgsnd(msgid, (void*)&message, sizeof(message), 0);
 }
 
 int License::returnLicenseCount() {
